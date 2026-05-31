@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: #0b0f14;
+  color: #e5e7eb;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  /* Champs, boutons et libellés partagés par tous les outils */
+  .fld {
+    @apply w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm text-zinc-100 outline-none transition focus:border-sky-500 font-mono;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium bg-zinc-800 text-zinc-200 border border-zinc-700 hover:bg-zinc-700 transition cursor-pointer disabled:opacity-50;
+  }
+  .btnp {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold bg-sky-600 text-white hover:bg-sky-500 transition cursor-pointer disabled:opacity-50;
+  }
+  .lbl {
+    @apply block text-xs font-semibold text-zinc-400 uppercase tracking-wide mb-1.5;
+  }
+  .card {
+    @apply bg-zinc-900/50 border border-zinc-800 rounded-xl p-5;
+  }
+  .pill {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-zinc-800 text-zinc-300 border border-zinc-700;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
