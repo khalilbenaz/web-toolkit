@@ -1,6 +1,6 @@
 # 🧰 Web Toolkit
 
-Une suite de **19 outils web utiles**, rapides et **100 % côté navigateur** (aucune donnée envoyée à un serveur, sauf l'outil « Mon IP » qui interroge une fonction edge Cloudflare). Pensée comme un couteau suisse pour développeurs et créateurs.
+Une suite de **29 outils web utiles**, rapides et **100 % côté navigateur** (aucune donnée envoyée à un serveur, sauf l'outil « Mon IP » qui interroge une fonction edge Cloudflare). Pensée comme un couteau suisse pour développeurs et créateurs.
 
 🔗 **Démo en ligne :** déployée sur Cloudflare Pages — voir la section [Déploiement](#-déploiement).
 
@@ -31,6 +31,16 @@ Une suite de **19 outils web utiles**, rapides et **100 % côté navigateur** (a
 | | Diff de texte | Comparaison ligne par ligne (LCS) |
 | **Design** | Couleurs & contraste | HEX/RGB/HSL + ratio de contraste WCAG (AA/AAA) |
 | **Réseau** | Mon IP | IP publique + infos requête (Cloudflare edge) + infos navigateur |
+| **Convertir** | Convertisseur d'unités | Longueur, masse, température, données, vitesse, temps |
+| **Données** | CSV ⇄ JSON | Conversion bidirectionnelle CSV / JSON |
+| **Encodage** | Image → Base64 | Convertir une image en data URI (glisser-déposer) |
+| **Génération** | Aléatoire | Nombres, chaînes, dés & pile/face (CSPRNG) |
+| **Texte** | Slugify | Texte → slug d'URL |
+| **Texte** | Entités HTML | Encoder / décoder les entités HTML |
+| **Texte** | Outils de lignes | Trier, dédupliquer, inverser, numéroter… |
+| **Design** | Palette de couleurs | Nuances & harmonies depuis une couleur |
+| **Design** | Dégradé CSS | Générateur de gradient + code CSS |
+| **Design** | Box-shadow | Générateur d'ombre CSS |
 
 > 🔒 **Vie privée :** tout le traitement se fait dans votre navigateur. Seul « Mon IP » fait un appel réseau (vers `/api/ip`, une fonction Cloudflare qui renvoie les en-têtes de votre requête).
 

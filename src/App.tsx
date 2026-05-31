@@ -20,6 +20,16 @@ import NumBaseTool from './tools/NumBaseTool';
 import DiffTool from './tools/DiffTool';
 import CronTool from './tools/CronTool';
 import IpTool from './tools/IpTool';
+import UnitConverter from './tools/UnitConverter';
+import CsvJson from './tools/CsvJson';
+import PaletteTool from './tools/PaletteTool';
+import GradientTool from './tools/GradientTool';
+import ShadowTool from './tools/ShadowTool';
+import SlugTool from './tools/SlugTool';
+import HtmlEntities from './tools/HtmlEntities';
+import LineTools from './tools/LineTools';
+import ImageBase64 from './tools/ImageBase64';
+import RandomTool from './tools/RandomTool';
 
 interface Tool {
   id: string;
@@ -49,9 +59,19 @@ const TOOLS: Tool[] = [
   { id: 'diff', name: 'Diff de texte', category: 'Texte', blurb: 'Comparer deux textes', Component: DiffTool },
   { id: 'color', name: 'Couleurs & contraste', category: 'Design', blurb: 'HEX/RGB/HSL + ratio WCAG', Component: ColorTool },
   { id: 'ip', name: 'Mon IP', category: 'Réseau', blurb: 'IP publique + infos requête', Component: IpTool },
+  { id: 'unit', name: 'Convertisseur d’unités', category: 'Convertir', blurb: 'Longueur, masse, température, données…', Component: UnitConverter },
+  { id: 'csvjson', name: 'CSV ⇄ JSON', category: 'Données', blurb: 'Convertir CSV en JSON et inversement', Component: CsvJson },
+  { id: 'palette', name: 'Palette de couleurs', category: 'Design', blurb: 'Nuances et harmonies depuis une couleur', Component: PaletteTool },
+  { id: 'gradient', name: 'Dégradé CSS', category: 'Design', blurb: 'Générateur de gradient + code CSS', Component: GradientTool },
+  { id: 'shadow', name: 'Box-shadow', category: 'Design', blurb: 'Générateur d’ombre CSS', Component: ShadowTool },
+  { id: 'slug', name: 'Slugify', category: 'Texte', blurb: 'Texte → slug d’URL', Component: SlugTool },
+  { id: 'entities', name: 'Entités HTML', category: 'Texte', blurb: 'Encoder / décoder les entités HTML', Component: HtmlEntities },
+  { id: 'lines', name: 'Outils de lignes', category: 'Texte', blurb: 'Trier, dédupliquer, inverser…', Component: LineTools },
+  { id: 'imgb64', name: 'Image → Base64', category: 'Encodage', blurb: 'Convertir une image en data URI', Component: ImageBase64 },
+  { id: 'random', name: 'Aléatoire', category: 'Génération', blurb: 'Nombres, chaînes, dés (crypto)', Component: RandomTool },
 ];
 
-const CATEGORIES = ['Données', 'Encodage', 'Crypto', 'Génération', 'Texte', 'Design', 'Réseau'];
+const CATEGORIES = ['Données', 'Encodage', 'Convertir', 'Crypto', 'Génération', 'Texte', 'Design', 'Réseau'];
 
 export default function App() {
   const [activeId, setActiveId] = useState<string>(TOOLS[0].id);
