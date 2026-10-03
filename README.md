@@ -4,7 +4,7 @@ Une suite de **29 outils web utiles**, rapides et **100 % côté navigateur** (a
 
 🔗 **Démo en ligne :** déployée sur Cloudflare Pages — voir la section [Déploiement](#-déploiement).
 
-![Web Toolkit](https://img.shields.io/badge/React-18-61dafb) ![Vite](https://img.shields.io/badge/Vite-5-646cff) ![Tailwind](https://img.shields.io/badge/Tailwind-3-38bdf8) ![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-f38020)
+![Web Toolkit](https://img.shields.io/badge/React-18-61dafb) ![Vite](https://img.shields.io/badge/Vite-8-646cff) ![Tailwind](https://img.shields.io/badge/Tailwind-4-38bdf8) ![Cloudflare Pages](https://img.shields.io/badge/Cloudflare-Pages-f38020)
 
 ---
 
@@ -42,13 +42,13 @@ Une suite de **29 outils web utiles**, rapides et **100 % côté navigateur** (a
 | **Design** | Dégradé CSS | Générateur de gradient + code CSS |
 | **Design** | Box-shadow | Générateur d'ombre CSS |
 
-> 🔒 **Vie privée :** tout le traitement se fait dans votre navigateur. Seul « Mon IP » fait un appel réseau (vers `/api/ip`, une fonction Cloudflare qui renvoie les en-têtes de votre requête).
+> 🔒 **Vie privée :** tout le traitement se fait dans votre navigateur. Seul « Mon IP » fait un appel réseau (vers `/api/ip`, une fonction Cloudflare qui renvoie les en-têtes de votre requête, sans CORS ouvert). La police est servie par le site lui-même (aucune requête vers Google Fonts) et la CSP `connect-src 'self'` de `public/_headers` fait vérifier cette promesse par le navigateur.
 
 ---
 
 ## 🚀 Démarrage rapide
 
-Prérequis : **Node.js ≥ 18**.
+Prérequis : **Node.js ≥ 20**.
 
 ```bash
 git clone https://github.com/khalilbenaz/web-toolkit.git
@@ -63,7 +63,10 @@ Scripts disponibles :
 |--------|--------|
 | `npm run dev` | Serveur de développement (Vite, HMR) |
 | `npm run build` | Vérification TypeScript + build de production (`dist/`) |
-| `npm run preview` | Prévisualiser le build de production |
+| `npm run preview` | Prévisualiser le build de production (ne sert pas `public/_headers` : utiliser `npx wrangler pages dev dist`) |
+| `npm run lint` | ESLint (react-hooks, jsx-a11y) |
+| `npm test` | Tests unitaires Vitest |
+| `npm run typecheck` | Vérification TypeScript seule |
 | `npm run deploy` | Build + déploiement sur Cloudflare Pages |
 
 ---
@@ -77,25 +80,29 @@ web-toolkit/
 │   ├── main.tsx            # point d'entrée React
 │   ├── App.tsx             # shell + registre des outils (barre latérale, recherche)
 │   ├── index.css           # Tailwind + classes partagées (.fld .btn .btnp .lbl .card)
+│   ├── lib/                # fonctions pures (testées avec Vitest) + client de worker
+│   ├── workers/            # Web Worker des calculs lourds (regex, JSON, diff, CSV)
 │   └── tools/              # un fichier autonome par outil
 │       ├── JsonFormatter.tsx
 │       ├── HashTool.tsx
-│       └── … (19 outils)
+│       └── … (29 outils)
 ├── functions/
 │   └── api/
 │       └── ip.ts           # Cloudflare Pages Function (infos requête edge)
+├── public/_headers         # CSP stricte + en-têtes de sécurité (Cloudflare Pages)
 ├── wrangler.toml           # config Cloudflare Pages
 ├── tailwind.config.js
 └── vite.config.ts
 ```
 
-**Stack :** React 18 · TypeScript · Vite 5 · Tailwind CSS 3. Dépendances runtime minimales : `qrcode` (QR) et `marked` (Markdown). Tout le reste utilise les API natives du navigateur (Web Crypto, Clipboard, `TextEncoder`…).
+**Stack :** React 18 · TypeScript · Vite 8 · Tailwind CSS 4 · Vitest · ESLint. Dépendances runtime minimales : `qrcode` (QR), `marked` + `dompurify` (Markdown assaini) et la police Inter auto-hébergée (`@fontsource-variable/inter`). Tout le reste utilise les API natives du navigateur (Web Crypto, Clipboard, `TextEncoder`…).
 
 ### Ajouter un outil
 
 1. Créez `src/tools/MonOutil.tsx` exportant `export default function MonOutil() { … }`.
 2. Ajoutez une entrée dans le tableau `TOOLS` de `src/App.tsx` (`id`, `name`, `category`, `blurb`, `Component`).
-3. Utilisez les classes partagées (`.fld`, `.btn`, `.btnp`, `.lbl`, `.card`) pour rester cohérent.
+3. Utilisez les classes partagées (`.fld`, `.btn`, `.btnp`, `.lbl`, `.card`) pour rester cohérent, et reliez chaque `<label>` à son champ (`htmlFor`/`id`).
+4. Mettez la logique pure dans `src/lib/` avec un test `*.test.ts` ; un calcul potentiellement lourd passe par `runInWorker` (`src/lib/workerClient.ts`).
 
 ---
 
