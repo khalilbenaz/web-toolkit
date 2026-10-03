@@ -137,7 +137,7 @@ export default function GradientTool() {
         <div>
           <label className="lbl">Arrêts de couleur</label>
           <div className="space-y-2">
-            {stops.map((stop, idx) => (
+            {stops.map((stop) => (
               <div key={stop.id} className="flex items-center gap-3 flex-wrap">
                 <input
                   type="color"

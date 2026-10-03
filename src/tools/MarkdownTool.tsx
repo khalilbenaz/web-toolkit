@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { marked } from 'marked';
+import { renderMarkdown } from '../lib/markdown';
 
 const DEFAULT_MD = `# Titre principal
 
@@ -47,13 +47,7 @@ export default function MarkdownTool() {
   const [copied, setCopied] = useState<boolean>(false);
   const [copyError, setCopyError] = useState<string>('');
 
-  const html = useMemo<string>(() => {
-    try {
-      return marked.parse(md) as string;
-    } catch (e) {
-      return `<p style="color:#f87171;">Erreur de rendu : ${(e as Error).message}</p>`;
-    }
-  }, [md]);
+  const html = useMemo<string>(() => renderMarkdown(md), [md]);
 
   const copyHtml = () => {
     setCopyError('');

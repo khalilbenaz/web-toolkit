@@ -1,10 +1,5 @@
 import { useState, useMemo } from 'react';
-
-interface MatchInfo {
-  fullMatch: string;
-  index: number;
-  groups: (string | undefined)[];
-}
+import { runRegex, type RegexResult } from '../lib/regex';
 
 export default function RegexTool() {
   const [pattern, setPattern] = useState<string>('');
@@ -20,38 +15,10 @@ export default function RegexTool() {
     );
   }
 
-  const result = useMemo<{ error: string; matches: MatchInfo[] } | null>(() => {
-    if (!pattern) return null;
-    try {
-      const rx = new RegExp(pattern, flags);
-      const matches: MatchInfo[] = [];
-      if (flags.includes('g')) {
-        let m: RegExpExecArray | null;
-        rx.lastIndex = 0;
-        while ((m = rx.exec(text)) !== null) {
-          matches.push({
-            fullMatch: m[0],
-            index: m.index,
-            groups: m.slice(1),
-          });
-          // Prevent infinite loop on zero-width match
-          if (m[0].length === 0) rx.lastIndex++;
-        }
-      } else {
-        const m = rx.exec(text);
-        if (m) {
-          matches.push({
-            fullMatch: m[0],
-            index: m.index,
-            groups: m.slice(1),
-          });
-        }
-      }
-      return { error: '', matches };
-    } catch (e) {
-      return { error: (e as Error).message, matches: [] };
-    }
-  }, [pattern, flags, text]);
+  const result = useMemo<RegexResult | null>(
+    () => (pattern ? runRegex(pattern, flags, text) : null),
+    [pattern, flags, text],
+  );
 
   // Build highlighted segments when flag g is active
   const highlighted = useMemo<(string | { match: string; key: number })[]>(() => {

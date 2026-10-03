@@ -88,6 +88,15 @@ export default function ImageBase64() {
     <div className="space-y-6">
       {/* Zone de dépôt */}
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Choisir ou déposer une image"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            inputRef.current?.click();
+          }
+        }}
         className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors select-none
           ${dragging
             ? 'border-sky-500 bg-sky-500/10 text-sky-300'

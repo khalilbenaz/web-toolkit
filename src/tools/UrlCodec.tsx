@@ -10,7 +10,7 @@ export default function UrlCodec() {
     setError('');
     try {
       setOutput(encodeURIComponent(input));
-    } catch (e) {
+    } catch {
       setError("Erreur lors de l'encodage URL.");
       setOutput('');
     }

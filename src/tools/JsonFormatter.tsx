@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { formatJson, minifyJson } from '../lib/json';
 
 export default function JsonFormatter() {
   const [input, setInput] = useState<string>('');
@@ -18,12 +19,10 @@ export default function JsonFormatter() {
       setOutput('');
       return;
     }
-    try {
-      const parsed = JSON.parse(input);
-      const formatted = JSON.stringify(parsed, null, 2);
-      setOutput(formatted);
-    } catch (e) {
-      setError((e as Error).message);
+    const r = formatJson(input);
+    if (r.ok) setOutput(r.output);
+    else {
+      setError(r.error);
       setOutput('');
     }
   }, [input]);
@@ -34,15 +33,15 @@ export default function JsonFormatter() {
       setOutput('');
       return;
     }
-    try {
-      const parsed = JSON.parse(input);
-      const minified = JSON.stringify(parsed);
-      const before = new TextEncoder().encode(input).length;
-      const after = new TextEncoder().encode(minified).length;
-      setOutput(minified);
-      setSizeInfo({ before, after });
-    } catch (e) {
-      setError((e as Error).message);
+    const r = minifyJson(input);
+    if (r.ok) {
+      setOutput(r.output);
+      setSizeInfo({
+        before: new TextEncoder().encode(input).length,
+        after: new TextEncoder().encode(r.output).length,
+      });
+    } else {
+      setError(r.error);
       setOutput('');
     }
   }, [input]);

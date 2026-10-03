@@ -124,7 +124,7 @@ export default function TimestampTool() {
     });
   }
 
-  function CopyBtn({ k, val }: { k: string; val: string }) {
+  function renderCopyBtn(k: string, val: string) {
     return (
       <button
         className="btn text-xs shrink-0"
@@ -136,14 +136,14 @@ export default function TimestampTool() {
     );
   }
 
-  function Row({ label, value, k }: { label: string; value: string; k: string }) {
+  function renderRow(label: string, value: string, k: string) {
     return (
       <div className="flex flex-col sm:flex-row sm:items-center gap-2">
         <span className="w-32 shrink-0 text-xs text-zinc-400 font-semibold uppercase tracking-wide">
           {label}
         </span>
         <span className="flex-1 font-mono text-sm text-zinc-100 break-all">{value || '—'}</span>
-        <CopyBtn k={k} val={value} />
+        {renderCopyBtn(k, value)}
       </div>
     );
   }
@@ -181,10 +181,10 @@ export default function TimestampTool() {
 
         {epochResult.local && (
           <div className="flex flex-col gap-3 pt-1">
-            <Row label="Local" value={epochResult.local} k="local" />
-            <Row label="UTC" value={epochResult.utc} k="utc" />
-            <Row label="ISO 8601" value={epochResult.iso} k="iso" />
-            <Row label="Relatif" value={epochResult.relative} k="rel" />
+            {renderRow("Local", epochResult.local, "local")}
+            {renderRow("UTC", epochResult.utc, "utc")}
+            {renderRow("ISO 8601", epochResult.iso, "iso")}
+            {renderRow("Relatif", epochResult.relative, "rel")}
           </div>
         )}
       </div>
@@ -205,8 +205,8 @@ export default function TimestampTool() {
 
         {dateResult.epochS && (
           <div className="flex flex-col gap-3 pt-1">
-            <Row label="Secondes" value={dateResult.epochS} k="epS" />
-            <Row label="Ms" value={dateResult.epochMs} k="epMs" />
+            {renderRow("Secondes", dateResult.epochS, "epS")}
+            {renderRow("Ms", dateResult.epochMs, "epMs")}
           </div>
         )}
       </div>

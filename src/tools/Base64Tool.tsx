@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { decodeBase64, encodeBase64 } from '../lib/base64';
 
 export default function Base64Tool() {
   const [input, setInput] = useState<string>('');
@@ -9,12 +10,8 @@ export default function Base64Tool() {
   function encode() {
     setError('');
     try {
-      const bytes = new TextEncoder().encode(input);
-      const binary = Array.from(bytes)
-        .map((b) => String.fromCharCode(b))
-        .join('');
-      setOutput(btoa(binary));
-    } catch (e) {
+      setOutput(encodeBase64(input));
+    } catch {
       setError("Erreur lors de l'encodage.");
       setOutput('');
     }
@@ -23,9 +20,7 @@ export default function Base64Tool() {
   function decode() {
     setError('');
     try {
-      const binary = atob(input.trim());
-      const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-      setOutput(new TextDecoder().decode(bytes));
+      setOutput(decodeBase64(input));
     } catch {
       setError('Base64 invalide — vérifiez le contenu saisi.');
       setOutput('');

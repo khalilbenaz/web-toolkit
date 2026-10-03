@@ -1,5 +1,13 @@
-export const onRequest = async (context: any) => {
-  const req = context.request as Request;
+interface CfProperties {
+  country?: string;
+  city?: string;
+  region?: string;
+  timezone?: string;
+  asOrganization?: string;
+}
+
+export const onRequest = async (context: { request: Request & { cf?: CfProperties } }) => {
+  const req = context.request;
 
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -12,7 +20,7 @@ export const onRequest = async (context: any) => {
     });
   }
 
-  const cf = (req as any).cf || {};
+  const cf = req.cf ?? {};
   const ip =
     req.headers.get('cf-connecting-ip') ||
     req.headers.get('x-forwarded-for') ||

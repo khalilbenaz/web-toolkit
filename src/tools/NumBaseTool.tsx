@@ -1,23 +1,6 @@
 import { useState } from 'react';
+import { FIELDS, convertBases, type BaseKey, type Values } from '../lib/numBase';
 
-type BaseKey = 'bin' | 'oct' | 'dec' | 'hex';
-
-interface BaseField {
-  key: BaseKey;
-  label: string;
-  radix: number;
-  placeholder: string;
-  pattern: RegExp;
-}
-
-const FIELDS: BaseField[] = [
-  { key: 'bin', label: 'Binaire (base 2)',      radix: 2,  placeholder: '1010 0011…', pattern: /^[01]*$/ },
-  { key: 'oct', label: 'Octal (base 8)',         radix: 8,  placeholder: '0-7 seulement', pattern: /^[0-7]*$/ },
-  { key: 'dec', label: 'Décimal (base 10)',      radix: 10, placeholder: '0-9',        pattern: /^[0-9]*$/ },
-  { key: 'hex', label: 'Hexadécimal (base 16)',  radix: 16, placeholder: '0-9 A-F',   pattern: /^[0-9a-fA-F]*$/ },
-];
-
-type Values = Record<BaseKey, string>;
 type Errors = Record<BaseKey, boolean>;
 
 const EMPTY: Values = { bin: '', oct: '', dec: '', hex: '' };
@@ -45,21 +28,12 @@ export default function NumBaseTool() {
       return;
     }
 
-    // Conversion via parseInt en big-int natif (safe pour de grands nombres ?)
-    // parseInt peut perdre de la précision sur de très grands entiers mais suffit pour l'usage courant.
-    const num = parseInt(raw, field.radix);
-    if (!Number.isFinite(num) || num < 0) {
+    const newValues = convertBases(raw, field.radix);
+    if (!newValues) {
       setValues((prev) => ({ ...prev, [key]: raw }));
       setErrors((prev) => ({ ...prev, [key]: true }));
       return;
     }
-
-    const newValues: Values = {
-      bin: num.toString(2),
-      oct: num.toString(8),
-      dec: num.toString(10),
-      hex: num.toString(16).toUpperCase(),
-    };
 
     setValues(newValues);
     setErrors(NO_ERR);

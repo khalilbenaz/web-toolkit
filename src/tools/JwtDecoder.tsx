@@ -96,11 +96,6 @@ export default function JwtDecoder() {
     if (e.key === 'Enter') decode();
   };
 
-  const expiredFlag =
-    decoded && typeof decoded.payload.decoded['exp'] === 'number'
-      ? isExpired(decoded.payload.decoded['exp'])
-      : null;
-
   return (
     <div className="flex flex-col gap-5 max-w-5xl mx-auto">
       {/* Entrée */}
