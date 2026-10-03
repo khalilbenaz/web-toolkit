@@ -66,7 +66,7 @@ function SliderRow({ label, value, min, max, unit = 'px', onChange }: SliderRowP
   const id = useId();
   return (
     <div className="flex items-center gap-3">
-      <label htmlFor={id} className="text-xs text-zinc-400 w-24 flex-shrink-0">
+      <label htmlFor={id} className="text-xs text-zinc-400 w-16 sm:w-24 flex-shrink-0">
         {label}
       </label>
       <input
@@ -76,9 +76,9 @@ function SliderRow({ label, value, min, max, unit = 'px', onChange }: SliderRowP
         max={max}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="flex-1 accent-sky-500 cursor-pointer"
+        className="flex-1 min-w-0 accent-sky-500 cursor-pointer"
       />
-      <span className="text-xs font-mono text-zinc-300 w-16 text-right flex-shrink-0">
+      <span className="text-xs font-mono text-zinc-300 w-14 sm:w-16 text-right flex-shrink-0">
         {value}{unit}
       </span>
       <input
@@ -90,7 +90,8 @@ function SliderRow({ label, value, min, max, unit = 'px', onChange }: SliderRowP
           const v = Number(e.target.value);
           if (!isNaN(v)) onChange(Math.min(max, Math.max(min, v)));
         }}
-        className="fld w-16 text-xs text-center px-1"
+        aria-label={`${label} (valeur)`}
+        className="fld w-14 sm:w-16 text-xs text-center px-1"
       />
     </div>
   );
