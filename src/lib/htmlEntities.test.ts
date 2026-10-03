@@ -9,3 +9,15 @@ describe('htmlEntities', () => {
     expect(decodeHtml('&eacute;&#233;&#xe9;&amp;')).toBe('ééé&');
   });
 });
+
+describe('htmlEntities hors BMP', () => {
+  it('encodeHtml_emoji_produitUneSeuleEntiteValide', () => {
+    expect(encodeHtml('😀')).toBe('&#128512;');
+  });
+  it('encodeHtml_puisDecodeHtml_roundTripAvecEmoji', () => {
+    expect(decodeHtml(encodeHtml('a😀é𝒳'))).toBe('a😀é𝒳');
+  });
+  it('decodeHtml_pointDeCodeHorsPlage_laisseLEntiteTelleQuelle', () => {
+    expect(decodeHtml('x&#x110000;y&#99999999999;')).toBe('x&#x110000;y&#99999999999;');
+  });
+});

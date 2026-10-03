@@ -105,8 +105,8 @@ export const NAMED: Record<string, string> = {
 };
 
 export function encodeHtml(text: string): string {
-  return text
-    .split('')
+  // Array.from itère par point de code : les caractères hors BMP restent entiers.
+  return Array.from(text)
     .map((ch) => {
       if (ch === '&') return '&amp;';
       if (ch === '<') return '&lt;';
@@ -120,15 +120,20 @@ export function encodeHtml(text: string): string {
     .join('');
 }
 
+// Un point de code hors de [0, 0x10FFFF] ferait lever RangeError : on garde l'entité telle quelle.
+function fromCode(code: number, original: string): string {
+  return Number.isInteger(code) && code >= 0 && code <= 0x10ffff ? String.fromCodePoint(code) : original;
+}
+
 export function decodeHtml(text: string): string {
   return text.replace(/&([^;]+);/g, (_match, entity: string) => {
     // Entité numérique hexadécimale &#xHH;
     if (/^#x[0-9a-fA-F]+$/.test(entity)) {
-      return String.fromCodePoint(parseInt(entity.slice(2), 16));
+      return fromCode(parseInt(entity.slice(2), 16), _match);
     }
     // Entité numérique décimale &#nn;
     if (/^#\d+$/.test(entity)) {
-      return String.fromCodePoint(parseInt(entity.slice(1), 10));
+      return fromCode(parseInt(entity.slice(1), 10), _match);
     }
     // Entité nommée
     if (Object.prototype.hasOwnProperty.call(NAMED, entity)) {
