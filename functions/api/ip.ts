@@ -9,15 +9,10 @@ interface CfProperties {
 export const onRequest = async (context: { request: Request & { cf?: CfProperties } }) => {
   const req = context.request;
 
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        'access-control-allow-origin': '*',
-        'access-control-allow-methods': 'GET, OPTIONS',
-        'access-control-allow-headers': 'Content-Type',
-      },
-    });
+  // Appel strictement same-origin (IpTool → /api/ip) : aucun en-tête CORS, donc un site tiers
+  // ne peut pas lire l'IP et la géolocalisation du visiteur. Pas de préflight à servir.
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    return new Response(null, { status: 405, headers: { allow: 'GET, HEAD' } });
   }
 
   const cf = req.cf ?? {};
@@ -40,7 +35,8 @@ export const onRequest = async (context: { request: Request & { cf?: CfPropertie
     status: 200,
     headers: {
       'content-type': 'application/json',
-      'access-control-allow-origin': '*',
+      'cache-control': 'no-store',
+      'x-content-type-options': 'nosniff',
     },
   });
 };
