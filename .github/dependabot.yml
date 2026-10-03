@@ -1,0 +1,17 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      dev-tooling:
+        dependency-type: development
+        update-types: [minor, patch]
+
+  # Met à jour les SHA épinglés des actions (le commentaire # vX.Y.Z suit)
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
