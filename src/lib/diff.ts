@@ -1,3 +1,5 @@
+import { formatCount, LIMITS } from './limits';
+
 // ---- LCS (Longest Common Subsequence) ligne par ligne ----
 // Retourne un tableau de paires [indexA | null, indexB | null]
 // représentant le diff entre deux tableaux de lignes.
@@ -7,9 +9,41 @@ export type DiffLine =
   | { kind: 'added';   text: string }
   | { kind: 'removed'; text: string };
 
-export function computeDiff(linesA: string[], linesB: string[]): DiffLine[] {
+export class DiffTooLargeError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'DiffTooLargeError';
+  }
+}
+
+export function computeDiff(allA: string[], allB: string[]): DiffLine[] {
+  if (allA.length > LIMITS.diffLines || allB.length > LIMITS.diffLines) {
+    throw new DiffTooLargeError(
+      `Textes trop longs : ${formatCount(LIMITS.diffLines)} lignes maximum par côté.`,
+    );
+  }
+
+  // Préfixe et suffixe communs : inutile de les passer au LCP (cas courant d'une petite modification)
+  let start = 0;
+  while (start < allA.length && start < allB.length && allA[start] === allB[start]) start++;
+  let endA = allA.length;
+  let endB = allB.length;
+  while (endA > start && endB > start && allA[endA - 1] === allB[endB - 1]) {
+    endA--;
+    endB--;
+  }
+  const prefix: DiffLine[] = allA.slice(0, start).map((text) => ({ kind: 'equal', text }));
+  const suffix: DiffLine[] = allA.slice(endA).map((text) => ({ kind: 'equal', text }));
+  const linesA = allA.slice(start, endA);
+  const linesB = allB.slice(start, endB);
+
   const m = linesA.length;
   const n = linesB.length;
+  if ((m + 1) * (n + 1) > LIMITS.diffCells) {
+    throw new DiffTooLargeError(
+      'Les différences sont trop nombreuses pour être comparées dans le navigateur (textes trop longs et trop différents).',
+    );
+  }
 
   // Tableau LCS (longueur uniquement, pas les séquences entières)
   // On alloue un tableau 1D (m+1)*(n+1)
@@ -50,5 +84,5 @@ export function computeDiff(linesA: string[], linesB: string[]): DiffLine[] {
     }
   }
 
-  return result;
+  return [...prefix, ...result, ...suffix];
 }

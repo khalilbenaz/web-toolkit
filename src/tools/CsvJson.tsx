@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { csvToJson, jsonToCsv, type Delimiter } from '../lib/csv';
+import type { Delimiter } from '../lib/csv';
+import { useWorkerTask } from '../lib/useWorkerTask';
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -11,12 +12,24 @@ export default function CsvJson() {
   const [copied, setCopied]       = useState<boolean>(false);
   const [delimiter, setDelimiter]  = useState<Delimiter | 'auto'>('auto');
 
-  const { result, error } = useMemo<{ result: string; error: string }>(() => {
-    if (!input.trim()) return { result: '', error: '' };
-    return direction === 'csv2json'
-      ? csvToJson(input, delimiter)
-      : jsonToCsv(input, delimiter === 'auto' ? ',' : delimiter);
-  }, [input, direction, delimiter]);
+  // La conversion tourne dans un Web Worker (délai maximal, plafond de taille).
+  const csvInput = useMemo(
+    () => (direction === 'csv2json' && input.trim() ? { input, delimiter } : null),
+    [input, direction, delimiter],
+  );
+  const jsonInput = useMemo(
+    () =>
+      direction === 'json2csv' && input.trim()
+        ? { input, delimiter: delimiter === 'auto' ? (',' as const) : delimiter }
+        : null,
+    [input, direction, delimiter],
+  );
+  const csvTask = useWorkerTask('csvToJson', csvInput, 200);
+  const jsonTask = useWorkerTask('jsonToCsv', jsonInput, 200);
+  const task = direction === 'csv2json' ? csvTask : jsonTask;
+  const outcome = input.trim() ? task.result : null;
+  const result = outcome?.result ?? '';
+  const error = task.error || outcome?.error || '';
 
   function toggleDirection() {
     const next: Direction = direction === 'csv2json' ? 'json2csv' : 'csv2json';

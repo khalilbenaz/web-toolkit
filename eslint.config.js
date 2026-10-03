@@ -20,7 +20,10 @@ export default tseslint.config(
   {
     // Étape 1 : la règle est en avertissement tant que les libellés ne sont pas
     // reliés à leur champ (htmlFor/id) ; elle passe en erreur dans le commit a11y.
-    rules: { 'jsx-a11y/label-has-associated-control': 'warn' },
+    rules: {
+      'jsx-a11y/label-has-associated-control': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    },
   },
   {
     files: ['**/*.{ts,tsx}'],

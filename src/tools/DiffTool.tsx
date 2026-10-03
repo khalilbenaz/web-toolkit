@@ -1,30 +1,19 @@
 import { useState, useMemo } from 'react';
-import { computeDiff, type DiffLine } from '../lib/diff';
+import { useWorkerTask } from '../lib/useWorkerTask';
 
 export default function DiffTool() {
   const [before, setBefore] = useState<string>('');
   const [after, setAfter] = useState<string>('');
 
-  const { diff, added, removed } = useMemo<{
-    diff: DiffLine[];
-    added: number;
-    removed: number;
-  }>(() => {
-    if (!before && !after) return { diff: [], added: 0, removed: 0 };
-
-    const linesA = before.split('\n');
-    const linesB = after.split('\n');
-    const d = computeDiff(linesA, linesB);
-
-    let a = 0;
-    let r = 0;
-    for (const line of d) {
-      if (line.kind === 'added')   a++;
-      if (line.kind === 'removed') r++;
-    }
-
-    return { diff: d, added: a, removed: r };
-  }, [before, after]);
+  // Le LCS est exécuté dans un Web Worker (délai maximal, plafonds de taille).
+  const taskInput = useMemo(() => (before || after ? { before, after } : null), [before, after]);
+  const task = useWorkerTask('diff', taskInput, 250);
+  const { lines: diff, added, removed, error: diffError } = task.result ?? {
+    lines: [],
+    added: 0,
+    removed: 0,
+    error: '',
+  };
 
   const hasContent = before.length > 0 || after.length > 0;
 
@@ -55,6 +44,15 @@ export default function DiffTool() {
       {/* Résultat */}
       {hasContent && (
         <div className="space-y-3">
+          {task.status === 'running' && (
+            <p className="text-xs text-zinc-500" role="status">Calcul en cours…</p>
+          )}
+          {(task.status === 'error' || diffError) && (
+            <p className="text-sm text-amber-300 bg-amber-400/10 border border-amber-400/30 rounded-lg px-4 py-2" role="alert">
+              {task.error || diffError}
+            </p>
+          )}
+
           {/* Compteurs */}
           <div className="flex flex-wrap items-center gap-3">
             <span className="pill text-xs bg-emerald-400/10 text-emerald-400 border-emerald-400/30">
@@ -63,7 +61,7 @@ export default function DiffTool() {
             <span className="pill text-xs bg-red-400/10 text-red-400 border-red-400/30">
               -{removed} suppression{removed !== 1 ? 's' : ''}
             </span>
-            {added === 0 && removed === 0 && (
+            {task.status === 'done' && !diffError && added === 0 && removed === 0 && (
               <span className="text-sm text-zinc-500 italic">
                 Les deux textes sont identiques.
               </span>

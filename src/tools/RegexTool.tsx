@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
-import { runRegex, type RegexResult } from '../lib/regex';
+import { useWorkerTask } from '../lib/useWorkerTask';
+import { LIMITS, formatCount } from '../lib/limits';
 
 export default function RegexTool() {
   const [pattern, setPattern] = useState<string>('');
@@ -15,10 +16,11 @@ export default function RegexTool() {
     );
   }
 
-  const result = useMemo<RegexResult | null>(
-    () => (pattern ? runRegex(pattern, flags, text) : null),
-    [pattern, flags, text],
-  );
+  // Le motif est exécuté dans un Web Worker avec délai maximal : un motif catastrophique
+  // (ex. (a+)+$) est interrompu au lieu de figer l'onglet.
+  const taskInput = useMemo(() => (pattern ? { pattern, flags, text } : null), [pattern, flags, text]);
+  const task = useWorkerTask('regex', taskInput, 250);
+  const result = task.result;
 
   // Build highlighted segments when flag g is active
   const highlighted = useMemo<(string | { match: string; key: number })[]>(() => {
@@ -100,6 +102,16 @@ export default function RegexTool() {
         />
       </div>
 
+      {/* Calcul en cours / interrompu */}
+      {task.status === 'running' && (
+        <p className="text-xs text-zinc-500" role="status">Calcul en cours…</p>
+      )}
+      {task.status === 'error' && (
+        <p className="text-sm text-amber-300 bg-amber-400/10 border border-amber-400/30 rounded-lg px-4 py-2" role="alert">
+          {task.error}
+        </p>
+      )}
+
       {/* Erreur */}
       {result?.error && (
         <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
@@ -113,8 +125,13 @@ export default function RegexTool() {
           {/* Compteur */}
           <div className="flex items-center gap-3">
             <span className="pill text-sky-300">
-              {result.matches.length} correspondance{result.matches.length !== 1 ? 's' : ''}
+              {result.matches.length}{result.truncated ? '+' : ''} correspondance{result.matches.length !== 1 ? 's' : ''}
             </span>
+            {result.truncated && (
+              <span className="text-xs text-amber-300">
+                Affichage limité aux {formatCount(LIMITS.regexMatches)} premières correspondances.
+              </span>
+            )}
             {!text && (
               <span className="text-xs text-zinc-500">Saisissez un texte pour tester.</span>
             )}

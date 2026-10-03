@@ -1,3 +1,5 @@
+import { formatCount, LIMITS } from './limits';
+
 // ─── CSV ⇄ JSON ──────────────────────────────────────────────────────────────
 // Parseur RFC 4180 : champs entre guillemets (virgules, séparateurs et sauts de
 // ligne internes, guillemets doublés), CRLF ou LF, séparateur configurable.
@@ -78,11 +80,15 @@ export function parseCsv(text: string, delimiter: Delimiter = ','): string[][] {
   return rows;
 }
 
+const tooBigMessage = (n: number): string =>
+  `Entrée trop volumineuse (${formatCount(n)} caractères, maximum ${formatCount(LIMITS.csvChars)}).`;
+
 export function csvToJson(
   csv: string,
   delimiter: Delimiter | 'auto' = 'auto',
 ): { result: string; error: string } {
   if (csv.trim() === '') return { result: '', error: '' };
+  if (csv.length > LIMITS.csvChars) return { result: '', error: tooBigMessage(csv.length) };
 
   let rows: string[][];
   try {
@@ -120,6 +126,7 @@ export function escapeCsvField(value: unknown, delimiter: Delimiter = ','): stri
 }
 
 export function jsonToCsv(json: string, delimiter: Delimiter = ','): { result: string; error: string } {
+  if (json.length > LIMITS.csvChars) return { result: '', error: tooBigMessage(json.length) };
   let parsed: unknown;
   try {
     parsed = JSON.parse(json);

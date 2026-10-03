@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { formatJson, minifyJson } from '../lib/json';
+import { runInWorker } from '../lib/workerClient';
 
 export default function JsonFormatter() {
   const [input, setInput] = useState<string>('');
@@ -7,44 +7,47 @@ export default function JsonFormatter() {
   const [error, setError] = useState<string>('');
   const [sizeInfo, setSizeInfo] = useState<{ before: number; after: number } | null>(null);
   const [copied, setCopied] = useState<boolean>(false);
+  const [busy, setBusy] = useState<boolean>(false);
 
   const clearState = () => {
     setError('');
     setSizeInfo(null);
   };
 
-  const format = useCallback(() => {
-    clearState();
-    if (!input.trim()) {
+  // Le parsing se fait dans un Web Worker : un JSON énorme n'immobilise plus l'onglet.
+  const run = useCallback(
+    async (mode: 'format' | 'minify') => {
+      clearState();
       setOutput('');
-      return;
-    }
-    const r = formatJson(input);
-    if (r.ok) setOutput(r.output);
-    else {
-      setError(r.error);
-      setOutput('');
-    }
-  }, [input]);
+      if (!input.trim()) return;
+      setBusy(true);
+      try {
+        const r =
+          mode === 'format'
+            ? await runInWorker('jsonFormat', { input })
+            : await runInWorker('jsonMinify', { input });
+        if (r.ok) {
+          setOutput(r.output);
+          if (mode === 'minify') {
+            setSizeInfo({
+              before: new TextEncoder().encode(input).length,
+              after: new TextEncoder().encode(r.output).length,
+            });
+          }
+        } else {
+          setError(r.error);
+        }
+      } catch (e) {
+        setError((e as Error).message);
+      } finally {
+        setBusy(false);
+      }
+    },
+    [input],
+  );
 
-  const minify = useCallback(() => {
-    clearState();
-    if (!input.trim()) {
-      setOutput('');
-      return;
-    }
-    const r = minifyJson(input);
-    if (r.ok) {
-      setOutput(r.output);
-      setSizeInfo({
-        before: new TextEncoder().encode(input).length,
-        after: new TextEncoder().encode(r.output).length,
-      });
-    } else {
-      setError(r.error);
-      setOutput('');
-    }
-  }, [input]);
+  const format = useCallback(() => run('format'), [run]);
+  const minify = useCallback(() => run('minify'), [run]);
 
   const copy = useCallback(() => {
     if (!output) return;
@@ -79,10 +82,10 @@ export default function JsonFormatter() {
 
       {/* Actions */}
       <div className="flex flex-wrap items-center gap-2">
-        <button className="btnp" onClick={format}>
-          Formater
+        <button className="btnp" onClick={format} disabled={busy}>
+          {busy ? 'Calcul…' : 'Formater'}
         </button>
-        <button className="btn" onClick={minify}>
+        <button className="btn" onClick={minify} disabled={busy}>
           Minifier
         </button>
         <button
