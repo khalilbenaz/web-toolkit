@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { csvToJson, jsonToCsv } from '../lib/csv';
+import { csvToJson, jsonToCsv, type Delimiter } from '../lib/csv';
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -9,11 +9,14 @@ export default function CsvJson() {
   const [direction, setDirection] = useState<Direction>('csv2json');
   const [input, setInput]         = useState<string>('');
   const [copied, setCopied]       = useState<boolean>(false);
+  const [delimiter, setDelimiter]  = useState<Delimiter | 'auto'>('auto');
 
   const { result, error } = useMemo<{ result: string; error: string }>(() => {
     if (!input.trim()) return { result: '', error: '' };
-    return direction === 'csv2json' ? csvToJson(input) : jsonToCsv(input);
-  }, [input, direction]);
+    return direction === 'csv2json'
+      ? csvToJson(input, delimiter)
+      : jsonToCsv(input, delimiter === 'auto' ? ',' : delimiter);
+  }, [input, direction, delimiter]);
 
   function toggleDirection() {
     const next: Direction = direction === 'csv2json' ? 'json2csv' : 'csv2json';
@@ -56,6 +59,23 @@ export default function CsvJson() {
         <span className="text-xs text-zinc-500 ml-1">
           (cliquez pour inverser le sens et basculer les données)
         </span>
+      </div>
+
+      {/* Séparateur */}
+      <div className="max-w-xs">
+        <label className="lbl" htmlFor="csv-delimiter">Séparateur</label>
+        <select
+          id="csv-delimiter"
+          className="fld"
+          value={delimiter}
+          onChange={(e) => setDelimiter(e.target.value as Delimiter | 'auto')}
+        >
+          <option value="auto">Auto (CSV → JSON) / virgule</option>
+          <option value=",">Virgule ( , )</option>
+          <option value=";">Point-virgule ( ; )</option>
+          <option value={'\t'}>Tabulation</option>
+          <option value="|">Barre verticale ( | )</option>
+        </select>
       </div>
 
       {/* Entrée */}
@@ -102,7 +122,7 @@ export default function CsvJson() {
           <ul className="list-disc list-inside space-y-0.5">
             <li>
               <strong>CSV → JSON :</strong>{' '}
-              la 1re ligne devient les clés ; les champs entre guillemets et les virgules internes sont gérés.
+              la 1re ligne devient les clés ; séparateur détecté (virgule, point-virgule, tabulation), champs entre guillemets et sauts de ligne internes gérés.
             </li>
             <li>
               <strong>JSON → CSV :</strong>{' '}

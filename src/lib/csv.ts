@@ -1,76 +1,125 @@
-// ─── CSV parser ──────────────────────────────────────────────────────────────
-// Handles quoted fields (with embedded commas and escaped double-quotes "").
+// ─── CSV ⇄ JSON ──────────────────────────────────────────────────────────────
+// Parseur RFC 4180 : champs entre guillemets (virgules, séparateurs et sauts de
+// ligne internes, guillemets doublés), CRLF ou LF, séparateur configurable.
 
-export function parseCsvLine(line: string): string[] {
-  const fields: string[] = [];
-  let i = 0;
-  while (i <= line.length) {
-    if (line[i] === '"') {
-      // quoted field
-      let field = '';
-      i++; // skip opening quote
-      while (i < line.length) {
-        if (line[i] === '"' && line[i + 1] === '"') {
-          field += '"';
-          i += 2;
-        } else if (line[i] === '"') {
-          i++; // skip closing quote
-          break;
-        } else {
-          field += line[i++];
-        }
-      }
-      fields.push(field);
-      if (line[i] === ',') i++;
-    } else {
-      // unquoted field
-      const end = line.indexOf(',', i);
-      if (end === -1) {
-        fields.push(line.slice(i));
-        break;
-      } else {
-        fields.push(line.slice(i, end));
-        i = end + 1;
-      }
+export type Delimiter = ',' | ';' | '\t' | '|';
+
+export const DELIMITERS: Delimiter[] = [',', ';', '\t', '|'];
+
+/** Déduit le séparateur d'après le premier enregistrement (hors guillemets). */
+export function detectDelimiter(csv: string): Delimiter {
+  const counts = new Map<Delimiter, number>(DELIMITERS.map((d) => [d, 0]));
+  let inQuotes = false;
+  for (const ch of csv) {
+    if (ch === '"') inQuotes = !inQuotes;
+    else if (!inQuotes) {
+      if (ch === '\n' || ch === '\r') break;
+      if (counts.has(ch as Delimiter)) counts.set(ch as Delimiter, counts.get(ch as Delimiter)! + 1);
     }
   }
-  return fields;
+  let best: Delimiter = ',';
+  let bestCount = 0;
+  for (const [d, n] of counts) {
+    if (n > bestCount) {
+      best = d;
+      bestCount = n;
+    }
+  }
+  return best;
 }
 
-export function csvToJson(csv: string): { result: string; error: string } {
-  const lines = csv.split(/\r?\n/).filter((l) => l.trim() !== '');
-  if (lines.length === 0) return { result: '', error: '' };
-  if (lines.length === 1) {
+/** Découpe un texte CSV en lignes de champs. Lève une erreur si un guillemet n'est pas fermé. */
+export function parseCsv(text: string, delimiter: Delimiter = ','): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = '';
+  let inQuotes = false;
+  let i = 0;
+
+  const endRow = () => {
+    row.push(field);
+    field = '';
+    // Ignore les lignes totalement vides (ligne finale, lignes blanches)
+    if (!(row.length === 1 && row[0].trim() === '')) rows.push(row);
+    row = [];
+  };
+
+  while (i < text.length) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') {
+          field += '"';
+          i += 2;
+          continue;
+        }
+        inQuotes = false;
+      } else {
+        field += ch;
+      }
+      i++;
+      continue;
+    }
+    if (ch === '"' && field === '') {
+      inQuotes = true;
+    } else if (ch === delimiter) {
+      row.push(field);
+      field = '';
+    } else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+      endRow();
+    } else {
+      field += ch;
+    }
+    i++;
+  }
+  if (inQuotes) throw new Error('Guillemet non fermé : un champ entre guillemets n’est jamais terminé.');
+  if (field !== '' || row.length > 0) endRow();
+  return rows;
+}
+
+export function csvToJson(
+  csv: string,
+  delimiter: Delimiter | 'auto' = 'auto',
+): { result: string; error: string } {
+  if (csv.trim() === '') return { result: '', error: '' };
+
+  let rows: string[][];
+  try {
+    rows = parseCsv(csv, delimiter === 'auto' ? detectDelimiter(csv) : delimiter);
+  } catch (e) {
+    return { result: '', error: (e as Error).message };
+  }
+  if (rows.length < 2) {
     return { result: '', error: "Le CSV doit contenir au moins une ligne d'en-tête et une ligne de données." };
   }
 
-  const headers = parseCsvLine(lines[0]);
-  const rows: Record<string, string>[] = [];
-
-  for (let i = 1; i < lines.length; i++) {
-    const values = parseCsvLine(lines[i]);
+  const headers = rows[0];
+  const objects = rows.slice(1).map((values) => {
     const obj: Record<string, string> = {};
     headers.forEach((h, idx) => {
       obj[h] = values[idx] ?? '';
     });
-    rows.push(obj);
-  }
+    return obj;
+  });
 
-  return { result: JSON.stringify(rows, null, 2), error: '' };
+  return { result: JSON.stringify(objects, null, 2), error: '' };
 }
 
 // ─── JSON → CSV ───────────────────────────────────────────────────────────────
 
-export function escapeCsvField(value: unknown): string {
-  const s = value === null || value === undefined ? '' : String(value);
-  // quote if contains comma, double-quote, or newline
-  if (s.includes(',') || s.includes('"') || s.includes('\n') || s.includes('\r')) {
+export function escapeCsvField(value: unknown, delimiter: Delimiter = ','): string {
+  let s: string;
+  if (value === null || value === undefined) s = '';
+  else if (typeof value === 'object') s = JSON.stringify(value);
+  else s = String(value);
+  if (s.includes(delimiter) || s.includes('"') || s.includes('\n') || s.includes('\r')) {
     return '"' + s.replace(/"/g, '""') + '"';
   }
   return s;
 }
 
-export function jsonToCsv(json: string): { result: string; error: string } {
+export function jsonToCsv(json: string, delimiter: Delimiter = ','): { result: string; error: string } {
   let parsed: unknown;
   try {
     parsed = JSON.parse(json);
@@ -79,14 +128,13 @@ export function jsonToCsv(json: string): { result: string; error: string } {
   }
 
   if (!Array.isArray(parsed)) {
-    return { result: '', error: 'Le JSON doit être un tableau d\'objets (array).' };
+    return { result: '', error: "Le JSON doit être un tableau d'objets (array)." };
   }
-
   if (parsed.length === 0) {
     return { result: '', error: 'Le tableau JSON est vide.' };
   }
 
-  // Union of all keys, preserving first-seen order
+  // Union de toutes les clés, dans l'ordre d'apparition
   const keySet = new Set<string>();
   for (const item of parsed) {
     if (item && typeof item === 'object' && !Array.isArray(item)) {
@@ -95,12 +143,12 @@ export function jsonToCsv(json: string): { result: string; error: string } {
   }
   const headers = Array.from(keySet);
 
-  const csvLines: string[] = [headers.map(escapeCsvField).join(',')];
+  const csvLines: string[] = [headers.map((h) => escapeCsvField(h, delimiter)).join(delimiter)];
 
   for (const item of parsed) {
     if (item && typeof item === 'object' && !Array.isArray(item)) {
-      const row = headers.map((h) => escapeCsvField((item as Record<string, unknown>)[h]));
-      csvLines.push(row.join(','));
+      const row = headers.map((h) => escapeCsvField((item as Record<string, unknown>)[h], delimiter));
+      csvLines.push(row.join(delimiter));
     } else {
       return { result: '', error: `Élément non-objet détecté dans le tableau : ${JSON.stringify(item)}` };
     }
