@@ -17,10 +17,20 @@ export const FIELDS: BaseField[] = [
 
 export type Values = Record<BaseKey, string>;
 
-/** Convertit `raw` (écrit en base `radix`) vers les quatre bases, ou null si invalide. */
+const PREFIX: Record<number, string> = { 2: '0b', 8: '0o', 16: '0x' };
+
+/**
+ * Convertit `raw` (écrit en base `radix`) vers les quatre bases, ou null si invalide.
+ * Utilise BigInt : pas de perte de précision au-delà de 2^53 (valeurs 64 bits).
+ */
 export function convertBases(raw: string, radix: number): Values | null {
-  const num = parseInt(raw, radix);
-  if (!Number.isFinite(num) || num < 0) return null;
+  let num: bigint;
+  try {
+    num = BigInt((PREFIX[radix] ?? '') + raw);
+  } catch {
+    return null;
+  }
+  if (raw === '' || num < 0n) return null;
   return {
     bin: num.toString(2),
     oct: num.toString(8),
