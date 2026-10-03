@@ -64,14 +64,18 @@ export const CATEGORIES: Record<Category, CategoryDef> = {
     units: {
       b:   { label: 'Bit (b)',            factor: 0.125 },
       B:   { label: 'Octet (B)',          factor: 1 },
-      KB:  { label: 'Kilooctet (KB)',     factor: 1024 },
-      MB:  { label: 'Mégaoctet (MB)',     factor: 1024 ** 2 },
-      GB:  { label: 'Gigaoctet (GB)',     factor: 1024 ** 3 },
-      TB:  { label: 'Téraoctet (TB)',     factor: 1024 ** 4 },
-      PB:  { label: 'Pétaoctet (PB)',     factor: 1024 ** 5 },
+      // Préfixes SI (décimaux) : 1 KB = 1000 octets
+      KB:  { label: 'Kilooctet (KB)',     factor: 1000 },
+      MB:  { label: 'Mégaoctet (MB)',     factor: 1000 ** 2 },
+      GB:  { label: 'Gigaoctet (GB)',     factor: 1000 ** 3 },
+      TB:  { label: 'Téraoctet (TB)',     factor: 1000 ** 4 },
+      PB:  { label: 'Pétaoctet (PB)',     factor: 1000 ** 5 },
+      // Préfixes binaires (CEI) : 1 KiB = 1024 octets
       KiB: { label: 'Kibioctet (KiB)',    factor: 1024 },
       MiB: { label: 'Mébioctet (MiB)',    factor: 1024 ** 2 },
       GiB: { label: 'Gibioctet (GiB)',    factor: 1024 ** 3 },
+      TiB: { label: 'Tébioctet (TiB)',    factor: 1024 ** 4 },
+      PiB: { label: 'Pébioctet (PiB)',    factor: 1024 ** 5 },
     },
   },
   Vitesse: {
