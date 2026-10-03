@@ -101,8 +101,8 @@ export default function GradientTool() {
 
         {/* Type */}
         <div>
-          <label className="lbl">Type</label>
-          <div className="flex gap-2">
+          <div className="lbl" id="grad-type">Type</div>
+          <div role="group" aria-labelledby="grad-type" className="flex gap-2">
             {(['linear', 'radial'] as const).map((t) => (
               <button
                 key={t}
@@ -135,17 +135,19 @@ export default function GradientTool() {
 
         {/* Arrêts de couleur */}
         <div>
-          <label className="lbl">Arrêts de couleur</label>
+          <div className="lbl">Arrêts de couleur</div>
           <div className="space-y-2">
-            {stops.map((stop) => (
+            {stops.map((stop, idx) => (
               <div key={stop.id} className="flex items-center gap-3 flex-wrap">
                 <input
+                  aria-label={`Couleur de l'arrêt ${idx + 1}`}
                   type="color"
                   value={stop.color}
                   onChange={(e) => updateStop(stop.id, { color: e.target.value })}
                   className="w-9 h-9 rounded cursor-pointer border border-zinc-700 bg-zinc-900 p-0.5 flex-shrink-0"
                 />
                 <input
+                  aria-label={`Valeur hex de l'arrêt ${idx + 1}`}
                   className="fld w-24 font-mono text-xs"
                   value={stop.color}
                   onChange={(e) => updateStop(stop.id, { color: e.target.value })}
@@ -154,6 +156,7 @@ export default function GradientTool() {
                 <div className="flex-1 min-w-[140px]">
                   <div className="flex items-center gap-2">
                     <input
+                      aria-label={`Position de l'arrêt ${idx + 1} (%)`}
                       type="range"
                       min={0}
                       max={100}

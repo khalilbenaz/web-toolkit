@@ -45,6 +45,7 @@ export default function NumBaseTool() {
         <div key={f.key} className="card space-y-2">
           <label className="lbl">{f.label}</label>
           <input
+            aria-label={f.label}
             type="text"
             spellCheck={false}
             className={`fld ${errors[f.key] ? 'border-red-500 text-red-400 focus:border-red-400' : ''}`}

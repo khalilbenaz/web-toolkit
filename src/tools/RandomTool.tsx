@@ -199,8 +199,9 @@ export default function RandomTool() {
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="lbl">Minimum</label>
+              <label htmlFor="random-202" className="lbl">Minimum</label>
               <input
+                id="random-202"
                 type="number"
                 className="fld"
                 value={numMin}
@@ -208,8 +209,9 @@ export default function RandomTool() {
               />
             </div>
             <div>
-              <label className="lbl">Maximum</label>
+              <label htmlFor="random-211" className="lbl">Maximum</label>
               <input
+                id="random-211"
                 type="number"
                 className="fld"
                 value={numMax}
@@ -220,8 +222,9 @@ export default function RandomTool() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="lbl">Quantite</label>
+              <label htmlFor="random-223" className="lbl">Quantite</label>
               <input
+                id="random-223"
                 type="number"
                 min={1}
                 max={1000}
@@ -232,8 +235,9 @@ export default function RandomTool() {
             </div>
             {!numInteger && (
               <div>
-                <label className="lbl">Decimales</label>
+                <label htmlFor="random-235" className="lbl">Decimales</label>
                 <input
+                  id="random-235"
                   type="number"
                   min={1}
                   max={10}
@@ -260,7 +264,7 @@ export default function RandomTool() {
           </button>
 
           {numError && (
-            <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+            <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
               {numError}
             </p>
           )}
@@ -290,8 +294,9 @@ export default function RandomTool() {
         <div className="space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="lbl">Longueur</label>
+              <label htmlFor="random-293" className="lbl">Longueur</label>
               <input
+                id="random-293"
                 type="number"
                 min={1}
                 max={4096}
@@ -301,8 +306,9 @@ export default function RandomTool() {
               />
             </div>
             <div>
-              <label className="lbl">Quantite</label>
+              <label htmlFor="random-304" className="lbl">Quantite</label>
               <input
+                id="random-304"
                 type="number"
                 min={1}
                 max={50}
@@ -314,8 +320,8 @@ export default function RandomTool() {
           </div>
 
           <div>
-            <label className="lbl">Jeux de caracteres</label>
-            <div className="flex flex-wrap gap-4 mt-2">
+            <div className="lbl" id="random-charsets">Jeux de caracteres</div>
+            <div role="group" aria-labelledby="random-charsets" className="flex flex-wrap gap-4 mt-2">
               {([
                 { label: 'Majuscules (A-Z)', checked: strUpper, set: setStrUpper },
                 { label: 'Minuscules (a-z)', checked: strLower, set: setStrLower },
@@ -346,7 +352,7 @@ export default function RandomTool() {
           </button>
 
           {strError && (
-            <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+            <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
               {strError}
             </p>
           )}
@@ -354,7 +360,7 @@ export default function RandomTool() {
           {strResults.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="lbl mb-0">Resultats</label>
+                <div className="lbl mb-0">Resultats</div>
                 {strResults.length > 1 && (
                   <button className="btn text-sm" onClick={copyAllStr}>
                     {strCopied === 'all' ? 'Copie ✓' : 'Copier tout'}
@@ -383,8 +389,8 @@ export default function RandomTool() {
       {tab === 'dice' && (
         <div className="space-y-5">
           <div>
-            <label className="lbl">Type</label>
-            <div className="flex flex-wrap gap-3 mt-2">
+            <div className="lbl" id="random-type">Type</div>
+            <div role="group" aria-labelledby="random-type" className="flex flex-wrap gap-3 mt-2">
               {([
                 { key: 'd6', label: 'D6 (1-6)' },
                 { key: 'd20', label: 'D20 (1-20)' },
@@ -410,6 +416,7 @@ export default function RandomTool() {
               {diceType === 'coin' ? 'Nombre de lancers' : 'Nombre de des'}
             </label>
             <input
+              aria-label="Nombre de dés"
               type="number"
               min={1}
               max={100}

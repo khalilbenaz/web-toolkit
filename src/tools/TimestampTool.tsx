@@ -160,8 +160,9 @@ export default function TimestampTool() {
 
       {/* Section : Epoch → Date */}
       <div className="card flex flex-col gap-4">
-        <label className="lbl mb-0">Epoch → Date lisible</label>
+        <label htmlFor="ts-epoch" className="lbl mb-0">Epoch → Date lisible</label>
         <input
+          id="ts-epoch"
           className="fld"
           type="number"
           placeholder="Ex. 1717200000 (secondes) ou 1717200000000 (ms)"
@@ -191,8 +192,9 @@ export default function TimestampTool() {
 
       {/* Section : Date → Epoch */}
       <div className="card flex flex-col gap-4">
-        <label className="lbl mb-0">Date → Epoch</label>
+        <label htmlFor="ts-date" className="lbl mb-0">Date → Epoch</label>
         <input
+          id="ts-date"
           className="fld"
           type="datetime-local"
           value={dateInput}

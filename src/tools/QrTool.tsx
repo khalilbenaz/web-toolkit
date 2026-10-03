@@ -63,8 +63,9 @@ export default function QrTool() {
     <div className="flex flex-col gap-6 max-w-3xl">
       {/* Champ texte/URL */}
       <div>
-        <label className="lbl">Texte ou URL à encoder</label>
+        <label htmlFor="qr-66" className="lbl">Texte ou URL à encoder</label>
         <textarea
+          id="qr-66"
           className="fld resize-none"
           rows={3}
           placeholder="https://exemple.com ou tout autre texte…"
@@ -77,8 +78,9 @@ export default function QrTool() {
       {/* Options */}
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
         <div>
-          <label className="lbl">Niveau de correction d'erreur</label>
+          <label htmlFor="qr-80" className="lbl">Niveau de correction d'erreur</label>
           <select
+            id="qr-80"
             className="fld"
             value={level}
             onChange={(e) => setLevel(e.target.value as ErrorCorrectionLevel)}
@@ -95,8 +97,9 @@ export default function QrTool() {
         </div>
 
         <div>
-          <label className="lbl">Taille (px)</label>
+          <label htmlFor="qr-98" className="lbl">Taille (px)</label>
           <select
+            id="qr-98"
             className="fld"
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
@@ -182,7 +185,7 @@ export default function QrTool() {
           </div>
 
           <div className="w-full">
-            <label className="lbl">Contenu encodé</label>
+            <div className="lbl">Contenu encodé</div>
             <p className="text-sm text-zinc-400 break-all font-mono bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2">
               {text}
             </p>

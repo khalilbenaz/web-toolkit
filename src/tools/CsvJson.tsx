@@ -93,8 +93,9 @@ export default function CsvJson() {
 
       {/* Entrée */}
       <div>
-        <label className="lbl">Entrée — {sourceLbl}</label>
+        <label htmlFor="csv-input" className="lbl">Entrée — {sourceLbl}</label>
         <textarea
+          id="csv-input"
           className="fld h-48 resize-y"
           placeholder={inputPlaceholder}
           value={input}
@@ -105,7 +106,7 @@ export default function CsvJson() {
 
       {/* Erreur */}
       {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           {error}
         </p>
       )}
@@ -114,12 +115,13 @@ export default function CsvJson() {
       {result && !error && (
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="lbl mb-0">Résultat — {targetLbl}</label>
+            <label htmlFor="csv-output" className="lbl mb-0">Résultat — {targetLbl}</label>
             <button className="btn" onClick={copy}>
               {copied ? 'Copié ✓' : 'Copier'}
             </button>
           </div>
           <textarea
+            id="csv-output"
             readOnly
             className="fld h-56 resize-y text-emerald-400"
             value={result}

@@ -50,8 +50,9 @@ export default function RegexTool() {
       {/* Motif + flags */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto]">
         <div>
-          <label className="lbl">Expression régulière</label>
+          <label htmlFor="regex-53" className="lbl">Expression régulière</label>
           <input
+            id="regex-53"
             className="fld"
             placeholder="ex: (\w+)@([\w.]+)"
             value={pattern}
@@ -60,8 +61,8 @@ export default function RegexTool() {
           />
         </div>
         <div>
-          <label className="lbl">Flags</label>
-          <div className="flex gap-2 flex-wrap">
+          <div className="lbl" id="regex-flags">Flags</div>
+          <div role="group" aria-labelledby="regex-flags" className="flex gap-2 flex-wrap">
             {AVAILABLE_FLAGS.map((f) => (
               <button
                 key={f}
@@ -92,8 +93,9 @@ export default function RegexTool() {
 
       {/* Texte de test */}
       <div>
-        <label className="lbl">Texte de test</label>
+        <label htmlFor="regex-95" className="lbl">Texte de test</label>
         <textarea
+          id="regex-95"
           className="fld h-40 resize-y"
           placeholder="Saisissez le texte à analyser…"
           value={text}
@@ -114,7 +116,7 @@ export default function RegexTool() {
 
       {/* Erreur */}
       {result?.error && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           Regex invalide : {result.error}
         </p>
       )}
@@ -140,7 +142,7 @@ export default function RegexTool() {
           {/* Aperçu surligné */}
           {flags.includes('g') && highlighted.length > 0 && (
             <div>
-              <label className="lbl">Aperçu</label>
+              <div className="lbl">Aperçu</div>
               <div className="fld min-h-[80px] whitespace-pre-wrap break-all leading-relaxed text-zinc-300">
                 {highlighted.map((seg, i) =>
                   typeof seg === 'string' ? (
@@ -161,7 +163,7 @@ export default function RegexTool() {
           {/* Liste des matchs */}
           {result.matches.length > 0 && (
             <div>
-              <label className="lbl">Correspondances</label>
+              <div className="lbl">Correspondances</div>
               <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
                 {result.matches.map((m, i) => (
                   <div key={i} className="card flex flex-col gap-1.5">

@@ -104,6 +104,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen md:flex">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:px-3 focus:py-2 focus:rounded-lg focus:bg-sky-600 focus:text-white"
+      >
+        Aller au contenu
+      </a>
       {/* Barre supérieure (mobile uniquement) */}
       <div className="md:hidden sticky top-0 z-30 flex items-center gap-3 px-4 py-3 border-b border-zinc-800 bg-zinc-950/95 backdrop-blur">
         <button
@@ -199,7 +205,7 @@ export default function App() {
       </aside>
 
       {/* Contenu */}
-      <main id="main" className="flex-1 min-w-0">
+      <main id="main" tabIndex={-1} className="flex-1 min-w-0 outline-none">
         <header className="px-4 py-4 sm:px-8 sm:py-6 border-b border-zinc-800">
           <h2 className="text-xl sm:text-2xl font-bold text-white">{active.name}</h2>
           <p className="text-sm text-zinc-400 mt-1">{active.blurb}</p>

@@ -47,8 +47,8 @@ export default function UnitConverter() {
 
       {/* Sélecteur de catégorie */}
       <div>
-        <label className="lbl">Catégorie</label>
-        <div className="flex flex-wrap gap-2">
+        <div className="lbl" id="unit-category">Catégorie</div>
+        <div role="group" aria-labelledby="unit-category" className="flex flex-wrap gap-2">
           {CATEGORY_KEYS.map((cat) => (
             <button
               key={cat}
@@ -69,8 +69,9 @@ export default function UnitConverter() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-[1fr_auto_1fr_auto_1fr]">
         {/* Valeur source */}
         <div>
-          <label className="lbl">Valeur</label>
+          <label htmlFor="unit-72" className="lbl">Valeur</label>
           <input
+            id="unit-72"
             type="number"
             className="fld"
             value={rawValue}
@@ -81,8 +82,9 @@ export default function UnitConverter() {
 
         {/* Unité source */}
         <div>
-          <label className="lbl">De</label>
+          <label htmlFor="unit-84" className="lbl">De</label>
           <select
+            id="unit-84"
             className="fld"
             value={fromUnit}
             onChange={(e) => { setFromUnit(e.target.value); setCopied(false); }}
@@ -104,8 +106,9 @@ export default function UnitConverter() {
 
         {/* Unité cible */}
         <div>
-          <label className="lbl">Vers</label>
+          <label htmlFor="unit-107" className="lbl">Vers</label>
           <select
+            id="unit-107"
             className="fld"
             value={toUnit}
             onChange={(e) => { setToUnit(e.target.value); setCopied(false); }}
@@ -144,7 +147,7 @@ export default function UnitConverter() {
 
       {/* Cas particulier : valeur vide */}
       {rawValue.trim() !== '' && isNaN(parseFloat(rawValue)) && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           Valeur invalide — saisissez un nombre.
         </p>
       )}

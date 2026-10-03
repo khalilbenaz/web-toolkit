@@ -192,8 +192,9 @@ export default function PaletteTool() {
         </h2>
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex-1 min-w-[160px]">
-            <label className="lbl">Valeur hex</label>
+            <label htmlFor="palette-195" className="lbl">Valeur hex</label>
             <input
+              id="palette-195"
               className={`fld ${!isValid && hexInput.length > 1 ? 'border-red-500' : ''}`}
               value={hexInput}
               onChange={(e) => handleHexChange(e.target.value)}
@@ -202,8 +203,9 @@ export default function PaletteTool() {
             />
           </div>
           <div className="flex flex-col items-center gap-1">
-            <label className="lbl">Sélecteur</label>
+            <label htmlFor="palette-205" className="lbl">Sélecteur</label>
             <input
+              id="palette-205"
               type="color"
               value={pickerValue}
               onChange={(e) => handlePickerChange(e.target.value)}

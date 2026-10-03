@@ -37,6 +37,16 @@ body {
   }
 }
 
+/* Focus clavier visible sur les boutons, liens et cases (les champs ont déjà leur bordure) */
+button:focus-visible,
+a:focus-visible,
+[role='button']:focus-visible,
+input[type='checkbox']:focus-visible,
+input[type='range']:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 2px;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

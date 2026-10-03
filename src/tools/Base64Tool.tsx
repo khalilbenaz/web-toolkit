@@ -45,8 +45,9 @@ export default function Base64Tool() {
     <div className="space-y-6">
       {/* Entrée */}
       <div>
-        <label className="lbl">Texte ou Base64</label>
+        <label htmlFor="base64-48" className="lbl">Texte ou Base64</label>
         <textarea
+          id="base64-48"
           className="fld h-36 resize-y"
           placeholder="Saisir le texte à encoder, ou la chaîne Base64 à décoder…"
           value={input}
@@ -86,7 +87,7 @@ export default function Base64Tool() {
 
       {/* Erreur */}
       {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           {error}
         </p>
       )}
@@ -94,8 +95,9 @@ export default function Base64Tool() {
       {/* Résultat */}
       {output && !error && (
         <div>
-          <label className="lbl">Résultat</label>
+          <label htmlFor="base64-97" className="lbl">Résultat</label>
           <textarea
+            id="base64-97"
             readOnly
             className="fld h-36 resize-y text-emerald-400"
             value={output}

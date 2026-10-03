@@ -141,8 +141,9 @@ export default function ColorTool() {
         <div className="flex flex-wrap items-end gap-3">
           {/* HEX input */}
           <div className="flex-1 min-w-[140px]">
-            <label className="lbl">Hex</label>
+            <label htmlFor="color-144" className="lbl">Hex</label>
             <input
+              id="color-144"
               className={`fld ${!isValidHex && hexInput.length > 1 ? 'border-red-500' : ''}`}
               value={hexInput}
               onChange={(e) => handleHexChange(e.target.value)}
@@ -153,8 +154,9 @@ export default function ColorTool() {
 
           {/* Color picker */}
           <div className="flex flex-col items-center gap-1">
-            <label className="lbl">Sélecteur</label>
+            <label htmlFor="color-156" className="lbl">Sélecteur</label>
             <input
+              id="color-156"
               type="color"
               value={pickerValue}
               onChange={(e) => handlePickerChange(e.target.value)}
@@ -212,15 +214,17 @@ export default function ColorTool() {
         <div className="flex flex-wrap gap-6">
           {/* Foreground */}
           <div className="flex flex-col gap-1">
-            <label className="lbl">Couleur du texte</label>
+            <label htmlFor="color-215" className="lbl">Couleur du texte</label>
             <div className="flex items-center gap-2">
               <input
+                id="color-215"
                 type="color"
                 value={fgRgb ? rgbToHex(fgRgb) : '#ffffff'}
                 onChange={(e) => setFgHex(e.target.value)}
                 className="w-10 h-10 rounded cursor-pointer border border-zinc-700 bg-zinc-900 p-0.5"
               />
               <input
+                aria-label="Couleur du texte (hex)"
                 className="fld w-28"
                 value={fgHex}
                 onChange={(e) => setFgHex(e.target.value)}
@@ -231,15 +235,17 @@ export default function ColorTool() {
 
           {/* Background */}
           <div className="flex flex-col gap-1">
-            <label className="lbl">Couleur du fond</label>
+            <label htmlFor="color-234" className="lbl">Couleur du fond</label>
             <div className="flex items-center gap-2">
               <input
+                id="color-234"
                 type="color"
                 value={bgRgb ? rgbToHex(bgRgb) : '#000000'}
                 onChange={(e) => setBgHex(e.target.value)}
                 className="w-10 h-10 rounded cursor-pointer border border-zinc-700 bg-zinc-900 p-0.5"
               />
               <input
+                aria-label="Couleur du fond (hex)"
                 className="fld w-28"
                 value={bgHex}
                 onChange={(e) => setBgHex(e.target.value)}

@@ -22,8 +22,9 @@ export default function DiffTool() {
       {/* Zones de saisie côte à côte */}
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <label className="lbl">Avant</label>
+          <label htmlFor="diff-25" className="lbl">Avant</label>
           <textarea
+            id="diff-25"
             className="fld h-56 resize-y"
             placeholder="Coller le texte original…"
             value={before}
@@ -31,8 +32,9 @@ export default function DiffTool() {
           />
         </div>
         <div>
-          <label className="lbl">Après</label>
+          <label htmlFor="diff-34" className="lbl">Après</label>
           <textarea
+            id="diff-34"
             className="fld h-56 resize-y"
             placeholder="Coller le texte modifié…"
             value={after}

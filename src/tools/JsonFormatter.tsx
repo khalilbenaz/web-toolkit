@@ -70,8 +70,9 @@ export default function JsonFormatter() {
     <div className="flex flex-col gap-5 max-w-5xl mx-auto">
       {/* Zone d'entrée */}
       <div>
-        <label className="lbl">JSON d&apos;entrée</label>
+        <label htmlFor="json-73" className="lbl">JSON d&apos;entrée</label>
         <textarea
+          id="json-73"
           className="fld min-h-[200px] resize-y"
           placeholder='{ "exemple": "collez votre JSON ici" }'
           value={input}
@@ -116,8 +117,9 @@ export default function JsonFormatter() {
       {/* Sortie */}
       {output && !error && (
         <div>
-          <label className="lbl">Résultat</label>
+          <label htmlFor="json-119" className="lbl">Résultat</label>
           <textarea
+            id="json-119"
             className="fld min-h-[200px] resize-y"
             readOnly
             value={output}

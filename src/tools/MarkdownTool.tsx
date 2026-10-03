@@ -78,8 +78,9 @@ export default function MarkdownTool() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Colonne gauche : éditeur Markdown */}
         <div className="flex flex-col gap-2">
-          <label className="lbl">Markdown</label>
+          <label htmlFor="markdown-81" className="lbl">Markdown</label>
           <textarea
+            id="markdown-81"
             className="fld resize-none"
             style={{ minHeight: '520px' }}
             value={md}
@@ -91,7 +92,7 @@ export default function MarkdownTool() {
 
         {/* Colonne droite : aperçu rendu */}
         <div className="flex flex-col gap-2">
-          <label className="lbl">Aperçu</label>
+          <div className="lbl">Aperçu</div>
           <div
             className="card flex-1 overflow-auto
               [&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-zinc-100 [&_h1]:mb-3 [&_h1]:mt-1

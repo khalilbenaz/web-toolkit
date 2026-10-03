@@ -134,7 +134,7 @@ export default function ImageBase64() {
 
       {/* Erreur */}
       {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           {error}
         </p>
       )}
@@ -156,7 +156,7 @@ export default function ImageBase64() {
 
           {/* Aperçu */}
           <div>
-            <label className="lbl">Aperçu</label>
+            <div className="lbl">Aperçu</div>
             <div className="card flex items-center justify-center p-4 bg-zinc-800 rounded-xl min-h-[140px]">
               <img
                 src={dataUri}
@@ -169,12 +169,13 @@ export default function ImageBase64() {
           {/* Data URI */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="lbl mb-0">Data URI (Base64)</label>
+              <label htmlFor="imagebase64-172" className="lbl mb-0">Data URI (Base64)</label>
               <button className="btn text-sm" onClick={copy}>
                 {copied ? 'Copié ✓' : 'Copier le Data URI'}
               </button>
             </div>
             <textarea
+              id="imagebase64-172"
               readOnly
               className="fld h-36 resize-y text-emerald-400 text-xs font-mono"
               value={dataUri}

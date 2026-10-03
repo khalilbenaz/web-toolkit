@@ -98,8 +98,9 @@ export default function CaseTool() {
     <div className="space-y-6">
       {/* Entrée */}
       <div>
-        <label className="lbl">Texte source</label>
+        <label htmlFor="case-101" className="lbl">Texte source</label>
         <input
+          id="case-101"
           className="fld"
           type="text"
           placeholder="ex : monNomDeVariable, my-css-class, SOME_CONSTANT…"

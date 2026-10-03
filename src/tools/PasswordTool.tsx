@@ -106,6 +106,7 @@ export default function PasswordTool() {
       <div className="card space-y-3">
         <label className="lbl">Longueur : <span className="text-sky-400 font-bold">{length}</span></label>
         <input
+          aria-label="Longueur du mot de passe"
           type="range"
           min={8}
           max={64}

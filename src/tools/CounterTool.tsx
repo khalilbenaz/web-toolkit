@@ -64,8 +64,9 @@ export default function CounterTool() {
     <div className="space-y-6">
       {/* Textarea */}
       <div>
-        <label className="lbl">Texte à analyser</label>
+        <label htmlFor="counter-67" className="lbl">Texte à analyser</label>
         <textarea
+          id="counter-67"
           className="fld h-56 resize-y"
           placeholder="Collez ou saisissez votre texte ici…"
           value={text}

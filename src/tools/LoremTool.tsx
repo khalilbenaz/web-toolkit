@@ -123,10 +123,11 @@ export default function LoremTool() {
 
         {/* Nombre de paragraphes */}
         <div className="flex-1 min-w-[160px]">
-          <label className="lbl">
+          <label htmlFor="lorem-126" className="lbl">
             Nombre de paragraphes
           </label>
           <input
+            id="lorem-126"
             type="number"
             min={1}
             max={20}

@@ -41,8 +41,9 @@ export default function HtmlEntities() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="lbl">Texte source</label>
+        <label htmlFor="htmlentities-44" className="lbl">Texte source</label>
         <textarea
+          id="htmlentities-44"
           className="fld h-36 resize-y"
           placeholder={"Saisissez du texte brut ou du HTML avec entités (&amp;, &lt;, &#233;…)"}
           value={input}
@@ -70,15 +71,16 @@ export default function HtmlEntities() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           {error}
         </p>
       )}
 
       {output && !error && (
         <div>
-          <label className="lbl">Résultat</label>
+          <label htmlFor="htmlentities-80" className="lbl">Résultat</label>
           <textarea
+            id="htmlentities-80"
             readOnly
             className="fld h-36 resize-y text-emerald-400 font-mono text-sm"
             value={output}

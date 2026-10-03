@@ -186,6 +186,7 @@ export default function ShadowTool() {
               className="w-9 h-9 rounded cursor-pointer border border-zinc-700 bg-zinc-900 p-0.5"
             />
             <input
+              aria-label="Couleur de l'ombre (hex)"
               className="fld w-24 text-xs font-mono"
               value={color}
               onChange={(e) => setColor(e.target.value)}

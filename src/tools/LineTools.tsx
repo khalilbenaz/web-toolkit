@@ -84,8 +84,9 @@ export default function LineTools() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="lbl">Texte (une entrée par ligne)</label>
+        <label htmlFor="linetools-87" className="lbl">Texte (une entrée par ligne)</label>
         <textarea
+          id="linetools-87"
           className="fld h-44 resize-y font-mono text-sm"
           placeholder={"Collez vos lignes ici…"}
           value={input}
@@ -127,6 +128,7 @@ export default function LineTools() {
             </button>
           </div>
           <textarea
+            aria-label="Résultat"
             readOnly
             className="fld h-44 resize-y font-mono text-sm text-emerald-400"
             value={resultText}

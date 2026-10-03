@@ -66,8 +66,9 @@ export default function HashTool() {
     <div className="max-w-3xl mx-auto flex flex-col gap-6 p-4">
       {/* Entrée */}
       <div>
-        <label className="lbl">Texte à hacher</label>
+        <label htmlFor="hash-69" className="lbl">Texte à hacher</label>
         <textarea
+          id="hash-69"
           className="fld min-h-[120px] resize-y"
           placeholder="Saisissez votre texte ici…"
           value={input}

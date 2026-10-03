@@ -39,8 +39,9 @@ export default function SlugTool() {
   return (
     <div className="space-y-6">
       <div>
-        <label className="lbl">Texte source</label>
+        <label htmlFor="slug-42" className="lbl">Texte source</label>
         <textarea
+          id="slug-42"
           className="fld h-28 resize-y"
           placeholder="Mon Titre avec des Accents et des Espaces !"
           value={input}
@@ -53,7 +54,7 @@ export default function SlugTool() {
 
       <div className="flex flex-wrap gap-6 items-center">
         <div className="flex items-center gap-2">
-          <label className="lbl mb-0">Séparateur</label>
+          <div className="lbl mb-0">Séparateur</div>
           <div className="flex gap-1">
             <button
               className={separator === '-' ? 'btnp' : 'btn'}
@@ -83,7 +84,7 @@ export default function SlugTool() {
 
       {slug && (
         <div>
-          <label className="lbl">Slug généré</label>
+          <div className="lbl">Slug généré</div>
           <div className="fld flex items-center justify-between gap-3">
             <span className="text-emerald-400 font-mono text-sm break-all">{slug}</span>
             <button className="btn shrink-0" onClick={copy}>
@@ -94,7 +95,7 @@ export default function SlugTool() {
       )}
 
       {!slug && input.trim() && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           Le texte ne contient aucun caractère alphanumérique utilisable.
         </p>
       )}

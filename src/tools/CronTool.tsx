@@ -34,7 +34,7 @@ export default function CronTool() {
 
       {/* Input */}
       <div className="card flex flex-col gap-3">
-        <label className="lbl mb-0">Expression cron (5 champs)</label>
+        <label htmlFor="cron-37" className="lbl mb-0">Expression cron (5 champs)</label>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 text-xs font-mono text-zinc-500 px-1">
             {FIELD_NAMES.map((n, i) => (
@@ -42,6 +42,7 @@ export default function CronTool() {
             ))}
           </div>
           <input
+            id="cron-37"
             className="fld text-center tracking-widest text-base"
             type="text"
             spellCheck={false}

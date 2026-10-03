@@ -100,8 +100,9 @@ export default function JwtDecoder() {
     <div className="flex flex-col gap-5 max-w-5xl mx-auto">
       {/* Entrée */}
       <div>
-        <label className="lbl">Token JWT</label>
+        <label htmlFor="jwt-103" className="lbl">Token JWT</label>
         <input
+          id="jwt-103"
           className="fld"
           type="text"
           placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.signature"

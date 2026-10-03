@@ -38,8 +38,9 @@ export default function UrlCodec() {
     <div className="space-y-6">
       {/* Entrée */}
       <div>
-        <label className="lbl">URL ou texte</label>
+        <label htmlFor="url-41" className="lbl">URL ou texte</label>
         <textarea
+          id="url-41"
           className="fld h-36 resize-y"
           placeholder="Saisir l'URL à encoder, ou la chaîne encodée à décoder…"
           value={input}
@@ -68,7 +69,7 @@ export default function UrlCodec() {
 
       {/* Erreur */}
       {error && (
-        <p className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
+        <p role="alert" className="text-sm text-red-400 bg-red-400/10 border border-red-400/30 rounded-lg px-4 py-2">
           {error}
         </p>
       )}
@@ -76,8 +77,9 @@ export default function UrlCodec() {
       {/* Résultat */}
       {output && !error && (
         <div>
-          <label className="lbl">Résultat</label>
+          <label htmlFor="url-79" className="lbl">Résultat</label>
           <textarea
+            id="url-79"
             readOnly
             className="fld h-36 resize-y text-emerald-400"
             value={output}
