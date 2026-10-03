@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'ui-sans-serif', 'sans-serif'],
+        sans: ['Inter Variable', 'system-ui', 'ui-sans-serif', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
     },
