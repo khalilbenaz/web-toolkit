@@ -6,11 +6,12 @@ export default function Base64Tool() {
   const [output, setOutput] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
+  const [urlSafe, setUrlSafe] = useState<boolean>(false);
 
   function encode() {
     setError('');
     try {
-      setOutput(encodeBase64(input));
+      setOutput(encodeBase64(input, { urlSafe }));
     } catch {
       setError("Erreur lors de l'encodage.");
       setOutput('');
@@ -21,8 +22,13 @@ export default function Base64Tool() {
     setError('');
     try {
       setOutput(decodeBase64(input));
-    } catch {
-      setError('Base64 invalide — vérifiez le contenu saisi.');
+    } catch (e) {
+      const msg = (e as Error).message;
+      setError(
+        msg.includes('UTF-8')
+          ? `${msg}.`
+          : 'Base64 invalide — vérifiez le contenu saisi.',
+      );
       setOutput('');
     }
   }
@@ -53,7 +59,18 @@ export default function Base64Tool() {
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={urlSafe}
+            onChange={(e) => {
+              setUrlSafe(e.target.checked);
+              setOutput('');
+            }}
+          />
+          URL-safe (-, _ sans padding)
+        </label>
         <button className="btnp" onClick={encode}>
           Encoder →
         </button>
